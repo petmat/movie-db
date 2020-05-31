@@ -1,10 +1,14 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styles from "./MovieList.module.css";
-import { selectMovies } from "./movieSlice";
+import { selectMovies, fetchMovies } from "./movieSlice";
 
 const MovieList = () => {
   const movies = useSelector(selectMovies);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, []);
 
   return (
     <>
