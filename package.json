@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "install": "yarn --cwd backend install && yarn --cwd frontend install",
+    "postinstall": "yarn --cwd backend build"
+  }
+}
