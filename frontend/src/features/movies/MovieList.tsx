@@ -1,6 +1,16 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "./MovieList.module.css";
+import {
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@material-ui/core";
 import { selectMovies, fetchMovies } from "./movieSlice";
 
 const MovieList = () => {
@@ -8,29 +18,33 @@ const MovieList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchMovies());
-  }, []);
+  });
 
   return (
     <>
-      <h1>Movies</h1>
-      <div className={styles.table}>
-        <div className={`${styles.tableCell} ${styles.tableHeaderCell}`}>
-          Name
-        </div>
-        <div className={`${styles.tableCell} ${styles.tableHeaderCell}`}>
-          Year
-        </div>
-        <div className={`${styles.tableCell} ${styles.tableHeaderCell}`}>
-          Genre
-        </div>
-        {movies.map((movie) => (
-          <>
-            <div className={styles.tableCell}>{movie.name}</div>
-            <div className={styles.tableCell}>{movie.year}</div>
-            <div className={styles.tableCell}>{movie.genre}</div>
-          </>
-        ))}
-      </div>
+      <Typography variant="h4" gutterBottom>
+        Movies
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table aria-label="Movie list">
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Year</TableCell>
+              <TableCell>Genre</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {movies.map((movie) => (
+              <TableRow key={movie.name}>
+                <TableCell>{movie.name}</TableCell>
+                <TableCell>{movie.year}</TableCell>
+                <TableCell>{movie.genre}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 };

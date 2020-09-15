@@ -1,14 +1,18 @@
 import React from "react";
+import { AppBar, Toolbar, Typography, Box } from "@material-ui/core";
 import MovieList from "./features/movies/MovieList";
-import "./App.css";
 
 function App() {
   return (
     <div className="app">
-      <header>Movie DB</header>
-      <main>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6">Movie DB</Typography>
+        </Toolbar>
+      </AppBar>
+      <Box component="main" p={2}>
         <MovieList></MovieList>
-      </main>
+      </Box>
     </div>
   );
 }
