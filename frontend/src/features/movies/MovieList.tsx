@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import styles from "./MovieList.module.css";
 import {
+  Dialog,
+  Fab,
   Typography,
   Table,
   TableBody,
@@ -10,8 +11,27 @@ import {
   TableHead,
   TableRow,
   Paper,
+  makeStyles,
+  createStyles,
+  DialogTitle,
+  DialogContentText,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
 } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
 import { selectMovies, fetchMovies } from "./movieSlice";
+
+const useStyles = makeStyles(({ spacing }) =>
+  createStyles({
+    fab: {
+      position: "fixed",
+      bottom: spacing(2),
+      right: spacing(2),
+    },
+  })
+);
 
 const MovieList = () => {
   const movies = useSelector(selectMovies);
@@ -19,6 +39,17 @@ const MovieList = () => {
   useEffect(() => {
     dispatch(fetchMovies());
   });
+  const [createIsOpen, setCreateIsOpen] = useState(false);
+
+  const handleClickOpenCreate = () => {
+    setCreateIsOpen(true);
+  };
+
+  const handleCloseCreate = () => {
+    setCreateIsOpen(false);
+  };
+
+  const classes = useStyles();
 
   return (
     <>
@@ -45,6 +76,27 @@ const MovieList = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Fab
+        color="primary"
+        aria-label="add"
+        onClick={handleClickOpenCreate}
+        className={classes.fab}
+      >
+        <AddIcon />
+      </Fab>
+      <Dialog open={createIsOpen} onClose={handleCloseCreate}>
+        <DialogTitle>Create Movie</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To create a movie, give it a name
+          </DialogContentText>
+          <TextField autoFocus label="Name" fullWidth />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseCreate}>Cancel</Button>
+          <Button onClick={handleCloseCreate}>Create</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
