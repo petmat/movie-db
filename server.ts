@@ -42,11 +42,16 @@ app.get("/api/movies", function (_req, res) {
   });
 });
 
+app.post("/api/movies", (req, res) => {
+  const movie = req.body;
+  res.send(movie);
+});
+
 app.options("*", cors(options));
 
 app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/*", (req, res) => {
+app.get("/*", (_req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 

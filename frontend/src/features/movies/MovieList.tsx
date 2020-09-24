@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Dialog,
@@ -21,7 +21,7 @@ import {
   Button,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { selectMovies, fetchMovies } from "./movieSlice";
+import { selectMovies, fetchMovies, createMovie } from "./movieSlice";
 
 const useStyles = makeStyles(({ spacing }) =>
   createStyles({
@@ -38,8 +38,29 @@ const MovieList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchMovies());
-  });
+  }, []);
   const [createIsOpen, setCreateIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [year, setYear] = useState<number | null>(null);
+  const [genre, setGenre] = useState("");
+
+  const handleNameChange = (
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setName(e.target.value);
+  };
+
+  const handleYearChange = (
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setYear(parseInt(e.target.value));
+  };
+
+  const handleGenreChange = (
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setGenre(e.target.value);
+  };
 
   const handleClickOpenCreate = () => {
     setCreateIsOpen(true);
@@ -47,6 +68,12 @@ const MovieList = () => {
 
   const handleCloseCreate = () => {
     setCreateIsOpen(false);
+  };
+
+  const handleCreate = () => {
+    if (year) {
+      dispatch(createMovie({ name, year, genre }));
+    }
   };
 
   const classes = useStyles();
@@ -84,17 +111,28 @@ const MovieList = () => {
       >
         <AddIcon />
       </Fab>
-      <Dialog open={createIsOpen} onClose={handleCloseCreate}>
+      <Dialog
+        open={createIsOpen}
+        onClose={handleCloseCreate}
+        disablePortal={false}
+      >
         <DialogTitle>Create Movie</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To create a movie, give it a name
+            To create a movie, give it a name, year and genre
           </DialogContentText>
-          <TextField autoFocus label="Name" fullWidth />
+          <TextField
+            autoFocus
+            label="Name"
+            fullWidth
+            onChange={handleNameChange}
+          />
+          <TextField label="Year" fullWidth onChange={handleYearChange} />
+          <TextField label="Genre" fullWidth onChange={handleGenreChange} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseCreate}>Cancel</Button>
-          <Button onClick={handleCloseCreate}>Create</Button>
+          <Button onClick={handleCreate}>Create</Button>
         </DialogActions>
       </Dialog>
     </>

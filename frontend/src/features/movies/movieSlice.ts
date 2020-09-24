@@ -1,12 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../../app/store";
-import { getMovies } from "./movieApi";
-
-interface Movie {
-  name: string;
-  year: number;
-  genre: string;
-}
+import { Movie, getMovies, addMovie } from "./movieApi";
 
 interface MovieState {
   movies: Movie[];
@@ -28,10 +22,21 @@ export const movieSlice = createSlice({
     getMoviesError: (state: MovieState, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
+    createMovieSuccess: (state: MovieState, action: PayloadAction<Movie>) => {
+      state.movies = [...state.movies, action.payload];
+    },
+    createMovieError: (state: MovieState, action: PayloadAction<string>) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { getMoviesSuccess, getMoviesError } = movieSlice.actions;
+export const {
+  getMoviesSuccess,
+  getMoviesError,
+  createMovieSuccess,
+  createMovieError,
+} = movieSlice.actions;
 
 export const fetchMovies = (): AppThunk => async (dispatch) => {
   try {
@@ -39,6 +44,15 @@ export const fetchMovies = (): AppThunk => async (dispatch) => {
     dispatch(getMoviesSuccess(movies));
   } catch (err) {
     dispatch(getMoviesError(err.toString()));
+  }
+};
+
+export const createMovie = (movie: Movie): AppThunk => async (dispatch) => {
+  try {
+    await addMovie(movie);
+    dispatch(createMovieSuccess(movie));
+  } catch (err) {
+    dispatch(createMovieError(err.toString()));
   }
 };
 
